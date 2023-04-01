@@ -35,11 +35,10 @@ builder.Services.AddCors(cp => cp.AddPolicy("AllowAny", policy => policy
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+
 
 app.UseCors("AllowAny");
 
