@@ -20,14 +20,11 @@ jobs:
           dotnet-version: '6.0.x'
           include-prerelease: true
 
-      - name: Clean with dotnet
-        run: dotnet clean
-
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build -p:PVP_Projektas_API.sln --configuration Release
 
       - name: Publish with dotnet
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -p:PVP_Projektas_API.sln -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
