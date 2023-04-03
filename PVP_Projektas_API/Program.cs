@@ -6,7 +6,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = "Server=tcp:fridgedbserver.database.windows.net,1433;Initial Catalog=FridgeDB;Persist Security Info=False;User ID=CloudSA8c1ece76;Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+
 
 // Add services to the container.
 
