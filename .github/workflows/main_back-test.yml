@@ -21,10 +21,10 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build -p:../PVP_PROJEKTAS_API/PVP_Projektas_API.sln --configuration Release
+        run: dotnet build -p:./PVP_Projektas_API.sln --configuration Release
 
       - name: Publish with dotnet
-        run: dotnet publish -p:../PVP_PROJEKTAS_API/PVP_Projektas_API.sln -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -p:./PVP_Projektas_API.sln -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
