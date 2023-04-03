@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: dotnet-app
-          path: ${{ github.workspace }}/myappp
+          path: ${{ github.workspace }}/myapp
 
   deploy:
     needs: build
