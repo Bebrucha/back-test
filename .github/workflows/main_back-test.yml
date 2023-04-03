@@ -1,4 +1,4 @@
-name: Build and deploy ASP.NET Core app to Azure Web App
+name: Build and deploy ASP.Net Core app to Azure Web App - back-test
 
 on:
   push:
@@ -20,24 +20,27 @@ jobs:
           dotnet-version: "6.0.x"
           include-prerelease: true
 
+      - name: Restore NuGet packages
+        run: dotnet restore ./PVP_Projektas_API/PVP_Projektas_API.sln
+
       - name: Build with dotnet
-        run: dotnet build ./MyApp/MyApp.csproj --configuration Release
+        run: dotnet build ./PVP_Projektas_API/PVP_Projektas_API.sln --configuration Release
 
       - name: Publish with dotnet
-        run: dotnet publish ./MyApp/MyApp.csproj --configuration Release --output ${{env.GITHUB_WORKSPACE}}/myapp
+        run: dotnet publish ./PVP_Projektas_API/PVP_Projektas_API.csproj --configuration Release --output ${{ env.GITHUB_WORKSPACE }}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: myapp
-          path: ${{env.GITHUB_WORKSPACE}}/myapp
+          path: ${{ env.GITHUB_WORKSPACE }}/myapp
 
   deploy:
     needs: build
     runs-on: windows-latest
     environment:
-      name: production
-      url: ${{steps.deploy-to-webapp.outputs.webapp-url}}
+      name: "Production"
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
       - name: Download artifact from build job
@@ -46,8 +49,10 @@ jobs:
           name: myapp
 
       - name: Deploy to Azure Web App
+        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: my-azure-web-app
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{ github.workspace }}/myapp
+          app-name: "back-test"
+          slot-name: "Production"
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2787BD4E5CA54D979CED20C90426665D }}
+          package: ${{ env.GITHUB_WORKSPACE }}/myapp/
