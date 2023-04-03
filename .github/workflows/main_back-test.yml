@@ -24,13 +24,13 @@ jobs:
         run: dotnet build ./PVP_Projektas_API/PVP_Projektas_API.sln --configuration Release
 
       - name: Publish with dotnet
-        run: dotnet publish ./PVP_Projektas_API/PVP_Projektas_API.sln -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish ./PVP_Projektas_API/PVP_Projektas_API.sln -c Release -o ${{ github.workspace }}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: dotnet-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{ github.workspace }}/myappp
 
   deploy:
     needs: build
@@ -52,4 +52,4 @@ jobs:
           app-name: "back-test"
           slot-name: "Production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2787BD4E5CA54D979CED20C90426665D }}
-          package: ${{env.DOTNET_ROOT}}/myapp
+          package: ${{ github.workspace }}/myapp
