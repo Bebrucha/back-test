@@ -4,7 +4,7 @@ using PVP_Projektas_API.Interfaces;
 using PVP_Projektas_API.Repository;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
+using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Set up a connection string for Microsoft SQL Server.
