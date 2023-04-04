@@ -1,38 +1,42 @@
-name: Azure Web App Deployment
+name: Deploy to Azure Web App
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+env:
+  BUILD_PATH: ./PVP_Projektas_API/PVP_Projektas_API.csproj
+  APP_NAME: "back-test"
+  SLOT_NAME: "Production"
 
 jobs:
   build-and-deploy:
     runs-on: windows-latest
-    
     steps:
-    - uses: actions/checkout@v2
-      
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '3.1.x'
-        
-    - name: Build with dotnet
-      run: dotnet build ./PVP_Projektas_API/PVP_Projektas_API.csproj --configuration Release
-      
-    - name: Publish Artifact
-      run: dotnet publish ./PVP_Projektas_API/PVP_Projektas_API.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)
-      working-directory: ${{ github.workspace }}
-      
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: myapp
-        path: ${{ github.workspace }}/bin/Release/netcoreapp3.1/publish
-      
-    - name: Deploy Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'your-web-app-name'
-        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2787BD4E5CA54D979CED20C90426665D }}
-        package: ${{ github.workspace }}/myapp/
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0.x"
+          include-prerelease: true
+
+      - name: Restore NuGet packages
+        run: dotnet restore ${{ env.BUILD_PATH }}
+
+      - name: Build
+        run: dotnet build ${{ env.BUILD_PATH }} --configuration Release
+
+      - name: Publish
+        run: dotnet publish ${{ env.BUILD_PATH }} --configuration Release --output $(System.DefaultWorkingDirectory)/publish
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.APP_NAME }}
+          slot-name: ${{ env.SLOT_NAME }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2787BD4E5CA54D979CED20C90426665D }}
+          package: $(System.DefaultWorkingDirectory)/publish
