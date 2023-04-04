@@ -21,13 +21,13 @@ jobs:
           include-prerelease: true
 
       - name: Restore and build with dotnet
-        run: dotnet build ./PVP_Projektas_API/PVP_Projektas_API.csproj --configuration Release --output ${{ env.GITHUB_WORKSPACE }}/myapp --restore
+        run: dotnet build ./PVP_Projektas_API/PVP_Projektas_API.csproj --configuration Release --output ./myapp --restore
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: myapp
-          path: ${{ env.GITHUB_WORKSPACE }}/myapp
+          path: ./myapp
 
   deploy:
     needs: build
@@ -49,4 +49,4 @@ jobs:
           app-name: "back-test"
           slot-name: "Production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2787BD4E5CA54D979CED20C90426665D }}
-          package: ${{ env.GITHUB_WORKSPACE }}/myapp
+          package: ./myapp
