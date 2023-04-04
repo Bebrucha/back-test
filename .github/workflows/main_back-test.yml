@@ -1,4 +1,4 @@
-name: Build and deploy ASP.Net Core app to Azure Web App
+name: Deploy to Azure Web App
 
 on:
   push:
@@ -6,53 +6,37 @@ on:
       - main
   workflow_dispatch:
 
-jobs:
-  build:
-    runs-on: windows-latest
+env:
+  BUILD_PATH: ./PVP_Projektas_API/PVP_Projektas_API.csproj
+  APP_NAME: "back-test"
+  SLOT_NAME: "Production"
 
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up .NET Core
+      - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: "6.0.x"
           include-prerelease: true
 
       - name: Restore NuGet packages
-        run: dotnet restore ./PVP_Projektas_API/PVP_Projektas_API.sln
+        run: dotnet restore ${{ env.BUILD_PATH }}
 
-      - name: Build with dotnet
-        run: dotnet build ./PVP_Projektas_API/PVP_Projektas_API.sln --configuration Release
+      - name: Build
+        run: dotnet build ${{ env.BUILD_PATH }} --configuration Release
 
-      - name: Publish with dotnet
-        run: dotnet publish ./PVP_Projektas_API/PVP_Projektas_API.csproj --configuration Release --output ${{ github.workspace }}/myapp
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
-        with:
-          name: myapp
-          path: ${{ github.workspace }}/myapp
-
-  deploy:
-    needs: build
-    runs-on: windows-latest
-    environment:
-      name: "Production"
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: myapp
+      - name: Publish
+        run: dotnet publish ${{ env.BUILD_PATH }} --configuration Release --output $(System.DefaultWorkingDirectory)/publish
 
       - name: Deploy to Azure Web App
-        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: "back-test"
-          slot-name: "Production"
+          app-name: ${{ env.APP_NAME }}
+          slot-name: ${{ env.SLOT_NAME }}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2787BD4E5CA54D979CED20C90426665D }}
-          package: ${{ github.workspace }}/myapp/
+          package: $(System.DefaultWorkingDirectory)/publish
