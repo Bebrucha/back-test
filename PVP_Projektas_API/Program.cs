@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
-
+//fg
 // Set up a connection string for Microsoft SQL Server.
 var connectionString = "Server=<your_server_name>.database.windows.net;Initial Catalog=<your_database_name>;Persist Security Info=False;User ID=<your_user_id>;Password=<your_password>;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
