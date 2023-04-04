@@ -1,4 +1,4 @@
-name: Build and deploy ASP.Net Core app to Azure Web App - back-test
+name: Build and deploy ASP.Net Core app to Azure Web App
 
 on:
   push:
@@ -27,13 +27,13 @@ jobs:
         run: dotnet build ./PVP_Projektas_API/PVP_Projektas_API.sln --configuration Release
 
       - name: Publish with dotnet
-        run: dotnet publish ./PVP_Projektas_API/PVP_Projektas_API.csproj --configuration Release --output ${{ env.GITHUB_WORKSPACE }}/myapp
+        run: dotnet publish ./PVP_Projektas_API/PVP_Projektas_API.csproj --configuration Release --output ${{ github.workspace }}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: myapp
-          path: ${{ env.GITHUB_WORKSPACE }}/myapp
+          path: ${{ github.workspace }}/myapp
 
   deploy:
     needs: build
@@ -55,4 +55,4 @@ jobs:
           app-name: "back-test"
           slot-name: "Production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2787BD4E5CA54D979CED20C90426665D }}
-          package: D:\a\back-test\back-test/myapp/
+          package: ${{ github.workspace }}/myapp/
