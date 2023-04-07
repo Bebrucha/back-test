@@ -21,7 +21,7 @@ jobs:
           include-prerelease: true
 
       - name: Restore and build with dotnet
-        run: dotnet build ./PVP_Projektas_API/PVP_Projektas_API.csproj --configuration Release --output ./myapp --restore
+        run: dotnet build ./PVP_Projektas_API/PVP_Projektas_API.csproj --configuration Release --output ./back-test --restore
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
