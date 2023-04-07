@@ -26,8 +26,8 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
-          name: myapp
-          path: ./myapp/
+          name: back-test
+          path: ./back-test/
 
   deploy:
     needs: build
@@ -40,7 +40,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
-          name: myapp
+          name: back-test
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -49,4 +49,4 @@ jobs:
           app-name: "back-test"
           slot-name: "Production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2787BD4E5CA54D979CED20C90426665D }}
-          package: ${{ github.workspace }}/myapp/
+          package: ${{ github.workspace }}/back-test/
